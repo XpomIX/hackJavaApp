@@ -6,9 +6,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".PlanLayout">
-
-    <ImageView
-            android:layout_width="411dp"
-            android:layout_height="351dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/imageView"
-            tools:layout_editor_absoluteY="61dp" tools:layout_editor_absoluteX="0dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/infoView"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="68dp"
+            app:layout_constraintHorizontal_bias="0.045"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
