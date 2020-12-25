@@ -40,13 +40,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         for (Mark mark : marks) {
-            mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.title));
+            mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(mark.position));
         }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String title = marks[Integer.parseInt(marker.getId().substring(1))].title;
+                String title = marks[Integer.parseInt(marker.getId().substring(1))].name;
                 openPlanActivity(title);
                 return true;
             }
@@ -61,13 +61,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 }
 class Mark {
     String id;
-    String title;
+    String name;
     LatLng position;
 
-    Mark(String title, LatLng position) {
+    Mark(String name, LatLng position) {
         UUID uuid = UUID.randomUUID();
         this.id = uuid.toString();
-        this.title = title;
+        this.name = name;
         this.position = position;
     }
 }
