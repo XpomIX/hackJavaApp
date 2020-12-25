@@ -1,9 +1,15 @@
 package com.example.mapshack;
 
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -11,24 +17,55 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.UUID;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
+    ActionBarDrawerToggle toggle;
+
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
     private final Mark[] marks = new Mark[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navView = findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.item1:
+                        Toast.makeText(MapsActivity.this, "Item1", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item2:
+                        Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return false;
+            }
+        });
+
+
         marks[0] = new Mark("Монетка", new LatLng(57.142357545110094, 65.58988839556109));
         marks[1] = new Mark("Пятёрочка", new LatLng(56.142357545110094, 65.58988839556109));
         marks[2] = new Mark("Ашан", new LatLng(55.142357545110094, 65.58988839556109));
         marks[3] = new Mark("Окей", new LatLng(54.142357545110094, 65.58988839556109));
         marks[4] = new Mark("Пятёрочка2", new LatLng(53.142357545110094, 65.58988839556109));
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -57,6 +94,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = new Intent(this, PlanLayout.class);
         intent.putExtra(EXTRA_TEXT, title);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 class Mark {
