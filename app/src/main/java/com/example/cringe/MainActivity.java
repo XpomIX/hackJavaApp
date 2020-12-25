@@ -1,4 +1,4 @@
-package com.example.hackjavaapp;
+package com.example.cringe;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
