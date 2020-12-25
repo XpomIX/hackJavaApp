@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".PlanLayout">
-    <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/infoView"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="68dp"
-            app:layout_constraintHorizontal_bias="0.045"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:text="Название магазина(из базы данных)\nАдрес магазина(из базы данных)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/infoView"
+                android:padding="10dp"
+        />
+        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/staticGray"
+                app:src="@drawable/img"
+        />
+    </LinearLayout>
+</RelativeLayout>
