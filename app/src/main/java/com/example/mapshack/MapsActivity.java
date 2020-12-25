@@ -11,28 +11,22 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import java.util.UUID;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
-    private final LatLng[] marks = new LatLng[5];
-    private final String[] marksIds = new String[5];
-    private final String[] marksTitles = new String[5];
+    private final Mark[] marks = new Mark[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        marks[0] = new LatLng(57.142357545110094, 65.58988839556109);
-        marksIds[0] = "f7c76426-46af-11eb-b378-0242ac130002"; marksTitles[0] = "Монетка";
-        marks[1] = new LatLng(56.142357545110094, 65.58988839556109);
-        marksIds[1] = "fcf6358a-46af-11eb-b378-0242ac130002"; marksTitles[1] = "Пятёрочка";
-        marks[2] = new LatLng(55.142357545110094, 65.58988839556109);
-        marksIds[2] = "030bca02-46b0-11eb-b378-0242ac130002"; marksTitles[2] = "Ашан";
-        marks[3] = new LatLng(54.142357545110094, 65.58988839556109);
-        marksIds[3] = "056acd48-46b0-11eb-b378-0242ac130002"; marksTitles[3] = "Окей";
-        marks[4] = new LatLng(53.142357545110094, 65.58988839556109);
-        marksIds[4] = "071e52fe-46b0-11eb-b378-0242ac130002"; marksTitles[4] = "Пятёрочка2";
+        marks[0] = new Mark("Монетка", new LatLng(57.142357545110094, 65.58988839556109));
+        marks[1] = new Mark("Пятёрочка", new LatLng(56.142357545110094, 65.58988839556109));
+        marks[2] = new Mark("Ашан", new LatLng(55.142357545110094, 65.58988839556109));
+        marks[3] = new Mark("Окей", new LatLng(54.142357545110094, 65.58988839556109));
+        marks[4] = new Mark("Пятёрочка2", new LatLng(53.142357545110094, 65.58988839556109));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -45,15 +39,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        for (int i = 0; i < 5 ;i++) {
-            mMap.addMarker(new MarkerOptions().position(marks[i]).title(marksTitles[0]));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(marks[i]));
+        for (Mark mark : marks) {
+            mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.title));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(mark.position));
         }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String title = marksTitles[Integer.parseInt(marker.getId().substring(1))];
+                String title = marks[Integer.parseInt(marker.getId().substring(1))].title;
                 openPlanActivity(title);
                 return true;
             }
@@ -64,5 +57,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = new Intent(this, PlanLayout.class);
         intent.putExtra(EXTRA_TEXT, title);
         startActivity(intent);
+    }
+}
+class Mark {
+    String id;
+    String title;
+    LatLng position;
+
+    Mark(String title, LatLng position) {
+        UUID uuid = UUID.randomUUID();
+        this.id = uuid.toString();
+        this.title = title;
+        this.position = position;
     }
 }
