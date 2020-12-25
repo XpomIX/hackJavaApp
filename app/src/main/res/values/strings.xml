@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">HackJavaApp</string>
+    <string name="app_name">MapsHack</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.hackjavaapp;
+package com.example.mapshack;
 
 import org.junit.Test;
 
