@@ -1,5 +1,6 @@
 package com.example.mapshack;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ public class PlanLayout extends AppCompatActivity {
         String position = intent.getStringExtra(MapsActivity.EXTRA_TEXT);
 
         TextView info = findViewById(R.id.infoView);
+        this.setTitle(position);
         info.setText(position);
     }
 }

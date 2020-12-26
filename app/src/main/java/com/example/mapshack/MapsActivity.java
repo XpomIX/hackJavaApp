@@ -104,6 +104,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 }
+
 class Mark {
     String id;
     String name;
