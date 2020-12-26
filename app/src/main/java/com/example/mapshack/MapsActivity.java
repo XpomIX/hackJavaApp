@@ -63,7 +63,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 JSONObject jsonObject = new JSONObject(s);
                 JSONArray shopsArray = jsonObject.getJSONArray("shops");
                 String testString = shopsArray.toString();
-                Toast.makeText(MapsActivity.this, testString, Toast.LENGTH_LONG).show();
                 System.out.println("1");
                 for (int i = 0; i < shopsArray.length(); i++) {
                     JSONObject object = shopsArray.getJSONObject(i);
