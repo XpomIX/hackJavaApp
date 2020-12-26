@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static com.example.mapshack.NetworkUtils.getResponseFromURL;
@@ -31,13 +32,19 @@ import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private ArrayList<Mark> marks = new ArrayList<Mark>();
 
     ActionBarDrawerToggle toggle;
 
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
-    private final Mark[] marks = new Mark[5];
 
     private class AsyncGetAllCities extends AsyncTask<String, Void, String> {
+
+        private GoogleMap googleMap;
+
+        public AsyncGetAllCities(GoogleMap googleMap) {
+            this.googleMap = googleMap;
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -58,9 +65,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String testString = shopsArray.toString();
                 Toast.makeText(MapsActivity.this, testString, Toast.LENGTH_LONG).show();
                 System.out.println("1");
-//                for (int i = 0; i < shopsArray.length(); i++) {
-//
-//                }
+                for (int i = 0; i < shopsArray.length(); i++) {
+                    JSONObject object = shopsArray.getJSONObject(i);
+                    String name = object.getString("name");
+
+                    JSONObject position = object.getJSONObject("position");
+                    double lat = Double.parseDouble(position.getString("lat"));
+                    double lng = Double.parseDouble(position.getString("lng"));
+                    LatLng latLng = new LatLng(lat, lng);
+                    marks.add(new Mark(name, latLng));
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+                }
+
+                for (Mark mark : marks) {
+                    mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(mark.position));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -88,8 +108,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (item.getItemId()) {
                     case R.id.item1:
                         Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
-                        AsyncGetAllCities getAllCities = new AsyncGetAllCities();
-                        getAllCities.execute("api/shop/all", "{\"city\": \"Тюмень\"}");
                         break;
                     case R.id.item2:
                         Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
@@ -99,12 +117,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
-        marks[0] = new Mark("Монетка", new LatLng(57.142357545110094, 65.58988839556109));
-        marks[1] = new Mark("Пятёрочка", new LatLng(56.142357545110094, 65.58988839556109));
-        marks[2] = new Mark("Ашан", new LatLng(55.142357545110094, 65.58988839556109));
-        marks[3] = new Mark("Окей", new LatLng(54.142357545110094, 65.58988839556109));
-        marks[4] = new Mark("Пятёрочка2", new LatLng(53.142357545110094, 65.58988839556109));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -115,6 +127,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        AsyncGetAllCities getAllCities = new AsyncGetAllCities(mMap);
+        getAllCities.execute("api/shop/all", "{\"city\": \"Тюмень\"}");
         for (Mark mark : marks) {
             mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(mark.position));
@@ -122,7 +136,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String title = marks[Integer.parseInt(marker.getId().substring(1))].name;
+                String title = marks.get(Integer.parseInt(marker.getId().substring(1))).name;
                 openPlanActivity(title);
                 return true;
             }
