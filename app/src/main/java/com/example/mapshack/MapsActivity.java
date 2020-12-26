@@ -1,6 +1,7 @@
 package com.example.mapshack;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,10 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -65,6 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String testString = shopsArray.toString();
                 Toast.makeText(MapsActivity.this, testString, Toast.LENGTH_LONG).show();
                 System.out.println("1");
+
                 for (int i = 0; i < shopsArray.length(); i++) {
                     JSONObject object = shopsArray.getJSONObject(i);
                     String name = object.getString("name");
@@ -79,12 +79,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 for (Mark mark : marks) {
                     mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(mark.position));
                 }
+                setCameraGmap();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+    void setCameraGmap()
+    {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(57.155339, 65.561864))
+                .zoom(11)
+                .build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        mMap.animateCamera(cameraUpdate);
     }
 
     @Override
@@ -158,15 +167,3 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 }
 
-class Mark {
-    String id;
-    String name;
-    LatLng position;
-
-    Mark(String name, LatLng position) {
-        UUID uuid = UUID.randomUUID();
-        this.id = uuid.toString();
-        this.name = name;
-        this.position = position;
-    }
-}
