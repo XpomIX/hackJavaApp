@@ -1,6 +1,7 @@
 package com.example.mapshack;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,8 +19,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.UUID;
+
+import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -29,6 +36,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
     private final Mark[] marks = new Mark[5];
+
+    private class AsyncGetAllCities extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = null;
+            try {
+                result =  getResponseFromURL(strings[0], strings[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray shopsArray = jsonObject.getJSONArray("shops");
+                String testString = shopsArray.toString();
+                Toast.makeText(MapsActivity.this, testString, Toast.LENGTH_LONG).show();
+                System.out.println("1");
+//                for (int i = 0; i < shopsArray.length(); i++) {
+//
+//                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +87,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.item1:
-                        Toast.makeText(MapsActivity.this, "Item1", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
+                        AsyncGetAllCities getAllCities = new AsyncGetAllCities();
+                        getAllCities.execute("api/shop/all", "{\"city\": \"Тюмень\"}");
                         break;
                     case R.id.item2:
                         Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
