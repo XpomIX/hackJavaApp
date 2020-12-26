@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -60,6 +61,11 @@ public class PlanLayout extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             imageView.setImage(ImageSource.bitmap(bitmap));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Toast.makeText(PlanLayout.this, R.string.loading, Toast.LENGTH_LONG).show();
         }
     }
 }
