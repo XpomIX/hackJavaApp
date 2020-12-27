@@ -32,7 +32,6 @@ import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ArrayList<Mark> marks = new ArrayList<Mark>();
     private String City = "tyumen";
 
     ActionBarDrawerToggle toggle;
@@ -69,14 +68,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 for (int i = 0; i < shopsArray.length(); i++) {
                     JSONObject object = shopsArray.getJSONObject(i);
-                    String name = object.getString("name");
                     String id = object.getString("id");
 
                     JSONObject position = object.getJSONObject("position");
                     double lat = Double.parseDouble(position.getString("lat"));
                     double lng = Double.parseDouble(position.getString("lng"));
                     LatLng latLng = new LatLng(lat, lng);
-                    marks.add(new Mark(id, name, latLng));
                     mMap.addMarker(new MarkerOptions().position(latLng).title(id));
                 }
 
@@ -153,25 +150,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         AsyncGetAllCities getAllCities = new AsyncGetAllCities(mMap);
         getAllCities.execute("api/shop/all", "{\"city\": \"Тюмень\"}");
-        for (Mark mark : marks) {
-            mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(mark.position));
-        }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String id = marker.getTitle();
-                String name = "test";
-                openPlanActivity(id, name);
+                openPlanActivity(id);
                 return true;
             }
         });
     }
 
-    public void openPlanActivity(String id, String name) {
+    public void openPlanActivity(String id) {
         Intent intent = new Intent(this, PlanLayout.class);
         intent.putExtra(EXTRA_TEXT, id);
-        intent.putExtra(EXTRA_NAME, name);
         startActivity(intent);
     }
 

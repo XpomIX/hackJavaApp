@@ -1,11 +1,9 @@
 package com.example.mapshack;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +15,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.example.mapshack.NetworkUtils.getResponseFromURL;
@@ -35,12 +32,22 @@ public class PlanLayout extends AppCompatActivity {
         imageView = findViewById(R.id.image_view);
         Intent intent = getIntent();
         String id = intent.getStringExtra(MapsActivity.EXTRA_TEXT);
-        String name = intent.getStringExtra(MapsActivity.EXTRA_NAME);
 
-        GetImageLink getImageLink = new GetImageLink();
-        getImageLink.execute("{\"id\": \"" + id + "\"}");
+        LoadData loadData = new LoadData();
+        loadData.execute("{\"id\": \"" + id + "\"}");
 
-        this.setTitle(name);
+        this.setTitle(R.string.loading);
+    }
+
+    private Bitmap loadImageBitmap(String imageUrl) {
+        Bitmap bm = null;
+        try {
+            InputStream inputStream = new URL(imageUrl).openStream();
+            bm = BitmapFactory.decodeStream(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bm;
     }
 
     private class LoadImage extends AsyncTask<String, Void, Bitmap> {
@@ -52,14 +59,15 @@ public class PlanLayout extends AppCompatActivity {
 
         @Override
         protected Bitmap doInBackground(String... strings) {
-            String url = strings[0];
-            Bitmap bm = null;
+            String response = strings[0];
+            String imageUrl = null;
             try {
-                InputStream inputStream = new URL(url).openStream();
-                bm = BitmapFactory.decodeStream(inputStream);
-            } catch (IOException e) {
+                JSONObject jsonObject = new JSONObject(response);
+                imageUrl = jsonObject.getString("image");
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
+            Bitmap bm = loadImageBitmap(imageUrl);
             return bm;
         }
 
@@ -68,42 +76,35 @@ public class PlanLayout extends AppCompatActivity {
             try {
                 imageView.setImage(ImageSource.bitmap(bitmap));
             } catch (Exception e) {
-                Toast.makeText(PlanLayout.this, R.string.error_loading_image, Toast.LENGTH_LONG).show();
+                Toast.makeText(PlanLayout.this, R.string.error_loading_image, Toast.LENGTH_SHORT).show();
             }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(PlanLayout.this, R.string.loading, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class GetImageLink extends AsyncTask<String, Void, String> {
-
+    private class LoadData extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
-            String result = null;
+            String response = null;
             try {
-                result = getResponseFromURL("api/shop/get", strings[0]);
+                response = getResponseFromURL("api/shop/get", strings[0]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return result;
+            return response;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String response) {
+            JSONObject jsonObject = null;
             try {
-                JSONObject jsonObject = new JSONObject(s);
-                String imageUrl = jsonObject.getString("image");
+                jsonObject = new JSONObject(response);
+                String name = jsonObject.getString("name");
                 String description = jsonObject.getString("description");
-
+                PlanLayout.this.setTitle(name);
                 info = findViewById(R.id.infoView);
                 info.setText(description);
-
                 LoadImage loadImage = new LoadImage(imageView);
-                loadImage.execute(imageUrl);
-
+                loadImage.execute(response);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
