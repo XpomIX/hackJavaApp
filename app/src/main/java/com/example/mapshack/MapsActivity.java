@@ -2,11 +2,8 @@ package com.example.mapshack;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.AsyncTask;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,10 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 
@@ -86,13 +80,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    void setCameraGmap(LatLng position) {
+    void moveCameraGmap(LatLng position) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(position)
                 .zoom(11)
                 .build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         mMap.animateCamera(cameraUpdate);
+    }
+
+    void setCameraGmap(LatLng position) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(position)
+                .zoom(11)
+                .build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        mMap.moveCamera(cameraUpdate);
     }
 
     @Override
@@ -144,7 +147,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        renderCity(new City(getCity(), cities.get(getCity())));
+        renderCity(new City(getCity(), cities.get(getCity())), true);
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -156,6 +159,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void renderCity(City city) {
+        mMap.clear();
+        AsyncGetAllCities getAllCities = new AsyncGetAllCities();
+        getAllCities.execute("api/shop/all", "{\"city\": \"" + city.getName() + "\"}");
+        moveCameraGmap(city.getLatLng());
+        saveCity(city.getName());
+    }
+
+    public void renderCity(City city, boolean moveCamera) {
         mMap.clear();
         AsyncGetAllCities getAllCities = new AsyncGetAllCities();
         getAllCities.execute("api/shop/all", "{\"city\": \"" + city.getName() + "\"}");
