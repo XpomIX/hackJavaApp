@@ -10,6 +10,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -91,7 +92,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
 
@@ -106,13 +107,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.item1:
-                        Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.item2:
-                        Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
                         break;
                 }
-                return false;
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
             }
         });
 
