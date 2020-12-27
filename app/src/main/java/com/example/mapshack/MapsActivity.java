@@ -77,12 +77,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     double lng = Double.parseDouble(position.getString("lng"));
                     LatLng latLng = new LatLng(lat, lng);
                     marks.add(new Mark(id, name, latLng));
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(id));
                 }
 
-                for (Mark mark : marks) {
-                    mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
-                }
+//                for (int i = 0; i < marks.size(); i++) {
+//                    mMap.addMarker(new MarkerOptions().position(marks.get(i).position).title(marks.get(i).id));
+//                }
                 setCameraGmap(new LatLng(57.155339, 65.561864));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -160,9 +160,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String a = marker.getId();
-                String id = marks.get(Integer.parseInt(marker.getId().substring(1))).id;
-                String name = marks.get(Integer.parseInt(marker.getId().substring(1))).name;
+                String id = marker.getTitle();
+                String name = "test";
                 openPlanActivity(id, name);
                 return true;
             }
