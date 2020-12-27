@@ -12,11 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 
 public class PlanLayout extends AppCompatActivity {
 
@@ -29,13 +33,14 @@ public class PlanLayout extends AppCompatActivity {
 
         imageView = findViewById(R.id.image_view);
         Intent intent = getIntent();
-        String position = intent.getStringExtra(MapsActivity.EXTRA_TEXT);
-        LoadImage loadImage = new LoadImage(imageView);
-        loadImage.execute("https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png");
+        String id = intent.getStringExtra(MapsActivity.EXTRA_TEXT);
+
+        GetImageLink getImageLink = new GetImageLink();
+        getImageLink.execute("{\"id\": \"" + id + "\"}");
 
         TextView info = findViewById(R.id.infoView);
-        this.setTitle(position);
-        info.setText(position);
+        this.setTitle(id);
+        info.setText(id);
     }
 
     private class LoadImage extends AsyncTask<String, Void, Bitmap> {
@@ -66,6 +71,33 @@ public class PlanLayout extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             Toast.makeText(PlanLayout.this, R.string.loading, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class GetImageLink extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = null;
+            try {
+                result = getResponseFromURL("api/shop/get", strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                String imageUrl = jsonObject.getString("image");
+                LoadImage loadImage = new LoadImage(imageView);
+                loadImage.execute(imageUrl);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

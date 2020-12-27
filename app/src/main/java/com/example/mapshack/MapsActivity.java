@@ -158,16 +158,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String title = marks.get(Integer.parseInt(marker.getId().substring(1))).name;
-                openPlanActivity(title);
+                String a = marker.getId();
+                String id = marks.get(Integer.parseInt(marker.getId().substring(1))).id;
+                openPlanActivity(id);
                 return true;
             }
         });
     }
 
-    public void openPlanActivity(String title) {
+    public void openPlanActivity(String id) {
         Intent intent = new Intent(this, PlanLayout.class);
-        intent.putExtra(EXTRA_TEXT, title);
+        intent.putExtra(EXTRA_TEXT, id);
         startActivity(intent);
     }
 
