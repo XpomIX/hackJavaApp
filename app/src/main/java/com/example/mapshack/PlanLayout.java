@@ -25,6 +25,7 @@ import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 public class PlanLayout extends AppCompatActivity {
 
     SubsamplingScaleImageView imageView;
+    TextView info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +35,12 @@ public class PlanLayout extends AppCompatActivity {
         imageView = findViewById(R.id.image_view);
         Intent intent = getIntent();
         String id = intent.getStringExtra(MapsActivity.EXTRA_TEXT);
+        String name = intent.getStringExtra(MapsActivity.EXTRA_NAME);
 
         GetImageLink getImageLink = new GetImageLink();
         getImageLink.execute("{\"id\": \"" + id + "\"}");
 
-        TextView info = findViewById(R.id.infoView);
-        this.setTitle(id);
-        info.setText(id);
+        this.setTitle(name);
     }
 
     private class LoadImage extends AsyncTask<String, Void, Bitmap> {
@@ -96,6 +96,11 @@ public class PlanLayout extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(s);
                 String imageUrl = jsonObject.getString("image");
+                String description = jsonObject.getString("description");
+
+                info = findViewById(R.id.infoView);
+                info.setText(description);
+
                 LoadImage loadImage = new LoadImage(imageView);
                 loadImage.execute(imageUrl);
 

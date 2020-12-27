@@ -38,6 +38,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ActionBarDrawerToggle toggle;
 
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
+    public static final String EXTRA_NAME = "com.example.mapshack.EXTRA_NAME";
 
     private class AsyncGetAllCities extends AsyncTask<String, Void, String> {
 
@@ -161,15 +162,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(Marker marker) {
                 String a = marker.getId();
                 String id = marks.get(Integer.parseInt(marker.getId().substring(1))).id;
-                openPlanActivity(id);
+                String name = marks.get(Integer.parseInt(marker.getId().substring(1))).name;
+                openPlanActivity(id, name);
                 return true;
             }
         });
     }
 
-    public void openPlanActivity(String id) {
+    public void openPlanActivity(String id, String name) {
         Intent intent = new Intent(this, PlanLayout.class);
         intent.putExtra(EXTRA_TEXT, id);
+        intent.putExtra(EXTRA_NAME, name);
         startActivity(intent);
     }
 
