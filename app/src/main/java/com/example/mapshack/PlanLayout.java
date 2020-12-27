@@ -65,12 +65,16 @@ public class PlanLayout extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            imageView.setImage(ImageSource.bitmap(bitmap));
+            try {
+                imageView.setImage(ImageSource.bitmap(bitmap));
+            } catch (Exception e) {
+                Toast.makeText(PlanLayout.this, R.string.error_loading_image, Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
         protected void onPreExecute() {
-            Toast.makeText(PlanLayout.this, R.string.loading, Toast.LENGTH_LONG).show();
+            Toast.makeText(PlanLayout.this, R.string.loading, Toast.LENGTH_SHORT).show();
         }
     }
 

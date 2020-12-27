@@ -7,4 +7,5 @@
     <string name="menuMap">Карта</string>
     <string name="menuChangeCity">Сменить город</string>
     <string name="menuAddShop">Добавить магазин</string>
+    <string name="error_loading_image">Не удалось загрузить изображение.</string>
 </resources>

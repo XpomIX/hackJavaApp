@@ -9,9 +9,8 @@ class Mark {
     String name;
     LatLng position;
 
-    Mark(String name, LatLng position) {
-        UUID uuid = UUID.randomUUID();
-        this.id = uuid.toString();
+    Mark(String id, String name, LatLng position) {
+        this.id = id;
         this.name = name;
         this.position = position;
     }
