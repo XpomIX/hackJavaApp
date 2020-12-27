@@ -3,18 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
 >
-    <item
-            android:id="@+id/item1"
-            android:title="@string/menuMap"
-            android:icon="@drawable/ic_map"
-    />
-    <item
-            android:id="@+id/item3"
-            android:title="@string/menuAddShop"
-            android:icon="@drawable/ic_add"
-    />
     <item android:id="@+id/item2"
-          android:icon="@drawable/ic_editcity"
           android:title="@string/menuChangeCity"
           app:showAsAction="always|withText"
           android:orderInCategory="1"

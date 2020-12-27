@@ -108,10 +108,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
-                    case R.id.item1:
-                        break;
-                    case R.id.item2:
-                        break;
                     case R.id.tyumen:
                         renderCity(new City("tyumen", new LatLng(57.155339, 65.561864)));
                         break;
