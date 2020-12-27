@@ -32,7 +32,6 @@ import static com.example.mapshack.NetworkUtils.getResponseFromURL;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private String City = "tyumen";
 
     ActionBarDrawerToggle toggle;
 
@@ -40,12 +39,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String EXTRA_NAME = "com.example.mapshack.EXTRA_NAME";
 
     private class AsyncGetAllCities extends AsyncTask<String, Void, String> {
-
-        private GoogleMap googleMap;
-
-        public AsyncGetAllCities(GoogleMap googleMap) {
-            this.googleMap = googleMap;
-        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -80,7 +73,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                for (int i = 0; i < marks.size(); i++) {
 //                    mMap.addMarker(new MarkerOptions().position(marks.get(i).position).title(marks.get(i).id));
 //                }
-                setCameraGmap(new LatLng(57.155339, 65.561864));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -121,16 +113,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.item2:
                         break;
                     case R.id.tyumen:
-                        City = "tyumen";
-                        setCameraGmap(new LatLng(57.155339, 65.561864));
+                        renderCity(new City("tyumen", new LatLng(57.155339, 65.561864)));
                         break;
                     case R.id.ekb:
-                        City = "ekb";
-                        setCameraGmap(new LatLng(56.8519, 60.6122));
+                        renderCity(new City("ekb", new LatLng(56.8519, 60.6122)));
                         break;
                     case R.id.perm:
-                        City = "perm";
-                        setCameraGmap(new LatLng(58.0105, 56.2502));
+                        renderCity(new City("perm", new LatLng(58.0105, 56.2502)));
                         break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -148,8 +137,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        AsyncGetAllCities getAllCities = new AsyncGetAllCities(mMap);
-        getAllCities.execute("api/shop/all", "{\"city\": \"Тюмень\"}");
+        renderCity(new City("tyumen", new LatLng(57.155339, 65.561864)));
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -158,6 +146,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
+    }
+
+    public void renderCity(City city) {
+        mMap.clear();
+        AsyncGetAllCities getAllCities = new AsyncGetAllCities();
+        getAllCities.execute("api/shop/all", "{\"city\": \"" + city.getName() + "\"}");
+        setCameraGmap(city.getLatLng());
     }
 
     public void openPlanActivity(String id) {
