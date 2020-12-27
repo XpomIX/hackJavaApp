@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
     <item
             android:id="@+id/item1"
-            android:title="Карта"
+            android:title="@string/menuMap"
             android:icon="@drawable/ic_map"
     />
     <item
-            android:id="@+id/item2"
-            android:title="Сменить город"
-            android:icon="@drawable/ic_editcity"
-    />
-    <item
             android:id="@+id/item3"
-            android:title="Добавить магазин"
+            android:title="@string/menuAddShop"
             android:icon="@drawable/ic_add"
     />
+    <item android:id="@+id/item2"
+          android:icon="@drawable/ic_editcity"
+          android:title="@string/menuChangeCity"
+          app:showAsAction="always|withText"
+          android:orderInCategory="1"
+    >
+        <!-- "file" submenu -->
+        <menu>
+            <item
+                    android:id="@+id/tyumen"
+                    android:title="Тюмень"
+            />
+            <item
+                    android:id="@+id/ekb"
+                    android:title="Екатеринбург"
+            />
+            <item
+                    android:id="@+id/perm"
+                    android:title="Пермь"
+            />
+        </menu>
+    </item>
 </menu>
