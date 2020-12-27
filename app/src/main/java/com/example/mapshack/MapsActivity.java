@@ -1,6 +1,7 @@
 package com.example.mapshack;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.view.Menu;
@@ -25,6 +26,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.example.mapshack.NetworkUtils.getResponseFromURL;
@@ -33,10 +36,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
 
+    private HashMap<String, LatLng> cities = new HashMap<>();
+
     ActionBarDrawerToggle toggle;
 
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
-    public static final String EXTRA_NAME = "com.example.mapshack.EXTRA_NAME";
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String CITY_NAME = "city";
 
     private class AsyncGetAllCities extends AsyncTask<String, Void, String> {
 
@@ -93,6 +100,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        cities.put("tyumen", new LatLng(57.155339, 65.561864));
+        cities.put("ekb", new LatLng(56.8519, 60.6122));
+        cities.put("perm", new LatLng(58.0105, 56.2502));
+
         final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -133,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        renderCity(new City("tyumen", new LatLng(57.155339, 65.561864)));
+        renderCity(new City(getCity(), cities.get(getCity())));
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -149,6 +160,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         AsyncGetAllCities getAllCities = new AsyncGetAllCities();
         getAllCities.execute("api/shop/all", "{\"city\": \"" + city.getName() + "\"}");
         setCameraGmap(city.getLatLng());
+        saveCity(city.getName());
     }
 
     public void openPlanActivity(String id) {
@@ -163,6 +175,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void saveCity(String city) {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(CITY_NAME, city);
+        editor.apply();
+    }
+
+    public String getCity() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String city = sharedPreferences.getString(CITY_NAME, "tyumen");
+        return city;
     }
 }
 
