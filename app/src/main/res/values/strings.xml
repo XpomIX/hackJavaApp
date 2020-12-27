@@ -4,4 +4,7 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="loading">Загрузка...</string>
+    <string name="menuMap">Карта</string>
+    <string name="menuChangeCity">Сменить город</string>
+    <string name="menuAddShop">Добавить магазин</string>
 </resources>

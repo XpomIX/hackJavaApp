@@ -32,6 +32,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private ArrayList<Mark> marks = new ArrayList<Mark>();
+    private String City = "tyumen";
 
     ActionBarDrawerToggle toggle;
 
@@ -79,16 +80,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (Mark mark : marks) {
                     mMap.addMarker(new MarkerOptions().position(mark.position).title(mark.name));
                 }
-                setCameraGmap();
+                setCameraGmap(new LatLng(57.155339, 65.561864));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
-    void setCameraGmap()
-    {
+
+    void setCameraGmap(LatLng position) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(57.155339, 65.561864))
+                .target(position)
                 .zoom(11)
                 .build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
@@ -100,7 +101,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
 
@@ -113,12 +114,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
                     case R.id.item1:
                         Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.item2:
                         Toast.makeText(MapsActivity.this, "Item2", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.tyumen:
+                        City = "tyumen";
+                        setCameraGmap(new LatLng(57.155339, 65.561864));
+                        break;
+                    case R.id.ekb:
+                        City = "ekb";
+                        setCameraGmap(new LatLng(56.8519, 60.6122));
+                        break;
+                    case R.id.perm:
+                        City = "perm";
+                        setCameraGmap(new LatLng(58.0105, 56.2502));
                         break;
                 }
                 return false;
