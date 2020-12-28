@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +35,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private HashMap<String, LatLng> cities = new HashMap<>();
 
     ActionBarDrawerToggle toggle;
+    Button addCityButton;
 
     public static final String EXTRA_TEXT = "com.example.mapshack.EXTRA_TEXT";
 
@@ -120,6 +123,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        addCityButton = findViewById(R.id.add_city_button);
+        addCityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddCityActivity();
+            }
+        });
+
         NavigationView navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -181,6 +192,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void openPlanActivity(String id) {
         Intent intent = new Intent(this, PlanLayout.class);
         intent.putExtra(EXTRA_TEXT, id);
+        startActivity(intent);
+    }
+
+    public void openAddCityActivity() {
+        Intent intent = new Intent(this, AddCityInfo.class);
         startActivity(intent);
     }
 

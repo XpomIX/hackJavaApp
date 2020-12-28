@@ -16,6 +16,9 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".AddCityInfo"
+        android:label="@string/menuAddShop">
+        </activity>
         <activity android:name=".PlanLayout">
         </activity>
         <!--
