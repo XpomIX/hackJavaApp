@@ -39,6 +39,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String CITY_NAME = "city";
 
+    public static final String CITY_TYUMEN = "tyumen";
+    public static final String CITY_EKB = "ekb";
+    public static final String CITY_PERM = "perm";
+
     private class AsyncGetAllCities extends AsyncTask<String, Void, String> {
 
         @Override
@@ -103,9 +107,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        cities.put("tyumen", new LatLng(57.155339, 65.561864));
-        cities.put("ekb", new LatLng(56.8519, 60.6122));
-        cities.put("perm", new LatLng(58.0105, 56.2502));
+        cities.put(CITY_TYUMEN, new LatLng(57.155339, 65.561864));
+        cities.put(CITY_EKB, new LatLng(56.8519, 60.6122));
+        cities.put(CITY_PERM, new LatLng(58.0105, 56.2502));
 
         final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -123,13 +127,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
                     case R.id.tyumen:
-                        renderCity(new City("tyumen", new LatLng(57.155339, 65.561864)));
+                        renderCity(new City(CITY_TYUMEN, new LatLng(57.155339, 65.561864)));
                         break;
                     case R.id.ekb:
-                        renderCity(new City("ekb", new LatLng(56.8519, 60.6122)));
+                        renderCity(new City(CITY_EKB, new LatLng(56.8519, 60.6122)));
                         break;
                     case R.id.perm:
-                        renderCity(new City("perm", new LatLng(58.0105, 56.2502)));
+                        renderCity(new City(CITY_PERM, new LatLng(58.0105, 56.2502)));
                         break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -197,7 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public String getCity() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        String city = sharedPreferences.getString(CITY_NAME, "tyumen");
+        String city = sharedPreferences.getString(CITY_NAME, CITY_TYUMEN);
         return city;
     }
 }
