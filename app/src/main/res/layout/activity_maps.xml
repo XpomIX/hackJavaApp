@@ -28,7 +28,7 @@
             android:layout_gravity="bottom"
             android:layout_margin="20dp"
             android:padding="10dp"
-            android:text="@string/menuAddShop"
+            android:text="Для владельцев магазинов"
     />
 </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
